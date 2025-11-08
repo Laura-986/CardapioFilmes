@@ -1,0 +1,83 @@
+body {
+    background-color: #ffffff;
+    font-family: "Momo Trust Display", sans-serif;
+}
+
+header{
+    color: #16a4e6;
+    display: flex;
+    width: 100%;
+}
+
+form{
+    padding-left: 10px;
+    width: 600px;
+    height: 50px;
+    position: relative;
+    left: 20%;
+    background-color: #16a4e6;
+    color: #ffffff;
+    border-radius: 20px;
+}
+
+input{
+    position: relative;
+    top: 25%;
+}
+label{
+    position: relative;
+    top: 25%;
+}
+
+aside {
+    padding: 15px;
+    float: right;
+    width: 25%;
+    border: solid 3px #16a4e6;
+    border-radius: 20px;
+}
+
+#imagem{
+    margin-left: 25px;
+}
+
+#informacao{
+    font-size: 20px;
+}
+
+p{
+    padding: 15px;
+    border-radius: 20px;
+    background-color: #16a4e6;
+    color: #ffffff;
+}
+
+ul{
+    padding: 25px;
+    border-radius: 20px;
+    background-color: #16a4e6;
+    color: #ffffff;
+}
+
+main {
+    display: flex;
+    gap: 20px;
+    width: 70%;
+}
+
+footer{
+    width: 100%;
+    text-align: center;
+    background-color: #16a4e6;
+    color: #ffffff;
+    margin-top: 30px;
+}
+
+button{
+    background-color: white;
+    color: black;
+    border-color: black;
+    width: 200px;
+    height: 30px;
+    margin: 2px;
+}
