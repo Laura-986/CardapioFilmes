@@ -1,0 +1,76 @@
+name: CI/CD - GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    name: Verificar estrutura do site
+    runs-on: ubuntu-latest
+    steps:
+      - name: Obter o projeto
+        uses: actions/checkout@v7
+
+      - name: Verificar arquivos obrigatórios
+        shell: bash
+        run: |
+          set -euo pipefail
+          for arquivo in index.html css/style.css css/filme.css css/pessoal.css; do
+            if [[ ! -f "$arquivo" ]]; then
+              echo "::error file=$arquivo::Arquivo obrigatório ausente: $arquivo"
+              exit 1
+            fi
+            printf 'Arquivo encontrado: %s\n' "$arquivo"
+          done
+
+  deploy:
+    name: Publicar no GitHub Pages
+    needs: ci
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    concurrency:
+      group: github-pages
+      cancel-in-progress: false
+    steps:
+      - name: Obter o projeto
+        uses: actions/checkout@v7
+
+      - name: Configurar GitHub Pages
+        uses: actions/configure-pages@v6
+
+      - name: Preparar arquivos para publicação
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/site"
+          cp -- ./*.html "$RUNNER_TEMP/site/"
+          cp -R -- css img "$RUNNER_TEMP/site/"
+
+      - name: Enviar artefato do site
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: ${{ runner.temp }}/site
+
+      - name: Publicar site
+        id: deployment
+        uses: actions/deploy-pages@v5
+
+      - name: Exibir URL publicada
+        env:
+          PAGE_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          printf 'Site publicado: %s\n' "$PAGE_URL"
+          printf 'Site publicado: [%s](%s)\n' "$PAGE_URL" "$PAGE_URL" >> "$GITHUB_STEP_SUMMARY"
